@@ -4,9 +4,7 @@ A web-based form for entering Fortnite match results for the Kern Scholastic Esp
 
 ## Live Form Access
 
-**Students and Coaches:** Access the form at: [[https://yourusername.github.io/repository-name](https://erikmadams.github.io/ksel-fortnite-results/)]
-
-*Replace with your actual GitHub Pages URL*
+**Students and Coaches:** Access the form at: [[https://erikmadams.github.io/ksel-fortnite-results](https://erikmadams.github.io/ksel-fortnite-results/)]
 
 ## What This Form Does
 
@@ -94,7 +92,7 @@ All submitted results are automatically collected in a Google Sheet that include
 
 For technical issues or questions about the form:
 - Contact your match official
-- Report issues on the [GitHub Issues](https://github.com/yourusername/repository-name/issues) page
+- Report issues on the [GitHub Issues](https://github.com/erikmadams/ksel-fortnite-results/issues) page
 - Email: erik_adams@kernhigh.org
 
 ## Updates
