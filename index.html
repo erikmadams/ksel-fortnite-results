@@ -11,9 +11,10 @@
     <div class="max-w-6xl mx-auto p-6">
         <!-- Header -->
         <div class="bg-white rounded-xl shadow-lg mb-6 p-6 border-l-4 border-red-500">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-0 min-h-[72px]">
                 <div class="flex items-center">
-                    <div class="flex items-center justify-center h-12 w-32 text-white font-bold rounded text-lg" style="background-color: #EE2A3E;">
+                    <img src="https://raw.githubusercontent.com/erikmadams/ksel-fortnite-results/main/KSEL_Header_Black_48x198.png" alt="KSEL Logo" style="height: 48px; width: 198px;" class="rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="flex items-center justify-center text-white font-bold rounded text-lg" style="background-color: #EE2A3E; height: 48px; width: 198px; display: none;">
                         KSEL
                     </div>
                 </div>
@@ -26,13 +27,13 @@
                 <div class="flex gap-2">
                     <button 
                         onclick="saveResults()"
-                        class="text-white px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors hover:opacity-90"
+                        class="text-white px-6 rounded-lg inline-flex items-center justify-center text-center gap-2 font-medium transition-colors hover:opacity-90 h-11"
                         style="background-color: #EE2A3E"
                     >
                         <i data-lucide="save" class="w-4 h-4"></i>
                         Save Results
                     </button>
-                    <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors">
+                    <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 rounded-lg inline-flex items-center justify-center text-center gap-2 font-medium transition-colors h-11">
                         <i data-lucide="x" class="w-4 h-4"></i>
                         Cancel
                     </button>
@@ -42,24 +43,60 @@
             <div id="status" class="hidden mt-4 p-3 rounded-lg"></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Match Information Panel -->
-            <div class="lg:col-span-1">
+        <!-- Two-panel grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Match Information Panel (1 column) -->
+            <div class="md:col-span-1">
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 text-left flex items-center gap-2">
                         <i data-lucide="info" class="w-5 h-5 text-red-600"></i>
                         Match Information
                     </h2>
                     
                     <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">School</label>
+                            <select
+                                id="school" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                            >
+                                <option value="">Select School...</option>
+                                <option value="Arvin">Arvin</option>
+                                <option value="Bakersfield High">Bakersfield High</option>
+                                <option value="Bakersfield Christian">Bakersfield Christian</option>
+                                <option value="Centennial">Centennial</option>
+                                <option value="Central Valley">Central Valley</option>
+                                <option value="Cesar Chavez">Cesar Chavez</option>
+                                <option value="Del Oro">Del Oro</option>
+                                <option value="Delano High">Delano High</option>
+                                <option value="East High">East High</option>
+                                <option value="Foothill">Foothill</option>
+                                <option value="Frontier">Frontier</option>
+                                <option value="Golden Valley">Golden Valley</option>
+                                <option value="Highland">Highland</option>
+                                <option value="Independence">Independence</option>
+                                <option value="Liberty">Liberty</option>
+                                <option value="Mira Monte">Mira Monte</option>
+                                <option value="North">North</option>
+                                <option value="Ridgeview">Ridgeview</option>
+                                <option value="Robert F Kennedy">Robert F Kennedy</option>
+                                <option value="Shafter">Shafter</option>
+                                <option value="South">South</option>
+                                <option value="Stockdale">Stockdale</option>
+                                <option value="Tierra Del Sol">Tierra Del Sol</option>
+                                <option value="Valley High">Valley High</option>
+                                <option value="Vista">Vista</option>
+                                <option value="Vista West">Vista West</option>
+                                <option value="Wasco">Wasco</option>
+                                <option value="West">West</option>
+                            </select>
+                        </div>
+                        
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Team Name</label>
                                 <input
                                     type="text"
-                                    id="teamName"
-                                    value="NRG Esports"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    id="teamName" value="NRG Esports" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                 />
                             </div>
                             
@@ -67,9 +104,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
                                 <input
                                     type="date"
-                                    id="date"
-                                    value="2025-09-03"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    id="date" value="2025-09-03" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                 />
                             </div>
                         </div>
@@ -77,8 +112,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Game Mode</label>
                             <select
-                                id="gameMode"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                id="gameMode" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                             >
                                 <option>Battle Royale</option>
                                 <option>Zero Build</option>
@@ -86,8 +120,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Scoring Guide -->
+            <!-- Scoring Guide Panel (2 columns) as a SIBLING -->
+            <div class="md:col-span-2">
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Scoring System</h3>
                     <div class="space-y-2 text-sm">
@@ -122,11 +158,11 @@
                 </div>
             </div>
 
-            <!-- Results Entry Panel -->
-            <div class="lg:col-span-3">
+            <!-- Results Entry Panel (full width below) -->
+            <div class="md:col-span-3">
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="mb-6">
-                        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2 text-left flex items-center gap-2">
                             <i data-lucide="users" class="w-5 h-5 text-red-600"></i>
                             Team Results
                         </h2>
@@ -215,9 +251,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Team Summary -->
-                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+        <!-- Team Summary (full width below results) -->
+            <div class="md:col-span-3 mt-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Team Summary</h3>
                     <div id="teamSummary">
                         <p class="text-gray-600">Fill out the form to see team statistics...</p>
@@ -248,57 +287,57 @@
         function updateSummary() {
             const placement = parseInt(document.getElementById('teamPlacement').value) || 0;
             const eliminations = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_eliminations`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_eliminations\`).value) || 0);
             }, 0);
             
             const assists = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_assists`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_assists\`).value) || 0);
             }, 0);
             
             const revives = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_revives`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_revives\`).value) || 0);
             }, 0);
             
             // Calculate average accuracy (only count players with accuracy > 0)
-            const validAccuracies = [1, 2, 3, 4].map(i => parseFloat(document.getElementById(`player${i}_accuracy`).value) || 0).filter(acc => acc > 0);
+            const validAccuracies = [1, 2, 3, 4].map(i => parseFloat(document.getElementById(\`player\${i}_accuracy\`).value) || 0).filter(acc => acc > 0);
             const avgAccuracy = validAccuracies.length > 0 ? (validAccuracies.reduce((sum, acc) => sum + acc, 0) / validAccuracies.length).toFixed(1) : 0;
             
             const damageToPlayers = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_damageToPlayers`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_damageToPlayers\`).value) || 0);
             }, 0);
             
             const damageTaken = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_damageTaken`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_damageTaken\`).value) || 0);
             }, 0);
             
             const distanceTraveled = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_distanceTraveled`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_distanceTraveled\`).value) || 0);
             }, 0);
             
             const hits = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(`player${i}_hits`).value) || 0);
+                return sum + (parseInt(document.getElementById(\`player\${i}_hits\`).value) || 0);
             }, 0);
             
             const placementPoints = placement ? getPlacementPoints(placement) : 0;
             const eliminationPoints = getEliminationPoints(eliminations);
             const totalPoints = placementPoints + eliminationPoints;
 
-            document.getElementById('teamSummary').innerHTML = `
+            document.getElementById('teamSummary').innerHTML = \`
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-blue-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-blue-600">${placement || '--'}</div>
+                        <div class="text-2xl font-bold text-blue-600">\${placement || '--'}</div>
                         <div class="text-sm text-blue-600">Team Placement</div>
                     </div>
                     <div class="bg-green-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-green-600">${eliminations}</div>
+                        <div class="text-2xl font-bold text-green-600">\${eliminations}</div>
                         <div class="text-sm text-green-600">Total Eliminations</div>
                     </div>
                     <div class="bg-yellow-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-yellow-600">${placementPoints}</div>
+                        <div class="text-2xl font-bold text-yellow-600">\${placementPoints}</div>
                         <div class="text-sm text-yellow-600">Placement Points</div>
                     </div>
                     <div class="bg-purple-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-purple-600">${totalPoints}</div>
+                        <div class="text-2xl font-bold text-purple-600">\${totalPoints}</div>
                         <div class="text-sm text-purple-600">Total Points</div>
                     </div>
                 </div>
@@ -307,36 +346,36 @@
                     <h4 class="text-md font-semibold text-gray-700 mb-3">Detailed Team Statistics</h4>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
                         <div class="bg-red-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-red-600">${assists}</div>
+                            <div class="text-xl font-bold text-red-600">\${assists}</div>
                             <div class="text-xs text-red-600">Total Assists</div>
                         </div>
                         <div class="bg-green-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-green-600">${revives}</div>
+                            <div class="text-xl font-bold text-green-600">\${revives}</div>
                             <div class="text-xs text-green-600">Total Revives</div>
                         </div>
                         <div class="bg-blue-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-blue-600">${avgAccuracy}%</div>
+                            <div class="text-xl font-bold text-blue-600">\${avgAccuracy}%</div>
                             <div class="text-xs text-blue-600">Avg Accuracy</div>
                         </div>
                         <div class="bg-orange-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-orange-600">${damageToPlayers.toLocaleString()}</div>
+                            <div class="text-xl font-bold text-orange-600">\${damageToPlayers.toLocaleString()}</div>
                             <div class="text-xs text-orange-600">Player Damage</div>
                         </div>
                         <div class="bg-indigo-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-indigo-600">${damageTaken.toLocaleString()}</div>
+                            <div class="text-xl font-bold text-indigo-600">\${damageTaken.toLocaleString()}</div>
                             <div class="text-xs text-indigo-600">Damage Taken</div>
                         </div>
                         <div class="bg-purple-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-purple-600">${distanceTraveled.toLocaleString()}</div>
+                            <div class="text-xl font-bold text-purple-600">\${distanceTraveled.toLocaleString()}</div>
                             <div class="text-xs text-purple-600">Distance Traveled</div>
                         </div>
                         <div class="bg-pink-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-pink-600">${hits}</div>
+                            <div class="text-xl font-bold text-pink-600">\${hits}</div>
                             <div class="text-xs text-pink-600">Total Hits</div>
                         </div>
                     </div>
                 </div>
-            `;
+            \`;
         }
 
         // Add event listeners for real-time updates
@@ -344,7 +383,7 @@
         
         function showStatus(message, isError = false) {
             const status = document.getElementById('status');
-            status.className = `mt-4 p-3 rounded-lg ${isError ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`;
+            status.className = \`mt-4 p-3 rounded-lg \${isError ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}\`;
             status.textContent = message;
             status.classList.remove('hidden');
         }
@@ -370,15 +409,15 @@
                 gameMode: document.getElementById('gameMode').value,
                 teamPlacement: parseInt(teamPlacement),
                 players: [1, 2, 3, 4].map(i => ({
-                    gamerTag: document.getElementById(`player${i}_gamerTag`).value || '',
-                    eliminations: parseInt(document.getElementById(`player${i}_eliminations`).value) || 0,
-                    assists: parseInt(document.getElementById(`player${i}_assists`).value) || 0,
-                    revives: parseInt(document.getElementById(`player${i}_revives`).value) || 0,
-                    accuracy: parseFloat(document.getElementById(`player${i}_accuracy`).value) || 0,
-                    damageToPlayers: parseInt(document.getElementById(`player${i}_damageToPlayers`).value) || 0,
-                    damageTaken: parseInt(document.getElementById(`player${i}_damageTaken`).value) || 0,
-                    distanceTraveled: parseInt(document.getElementById(`player${i}_distanceTraveled`).value) || 0,
-                    hits: parseInt(document.getElementById(`player${i}_hits`).value) || 0
+                    gamerTag: document.getElementById(\`player\${i}_gamerTag\`).value || '',
+                    eliminations: parseInt(document.getElementById(\`player\${i}_eliminations\`).value) || 0,
+                    assists: parseInt(document.getElementById(\`player\${i}_assists\`).value) || 0,
+                    revives: parseInt(document.getElementById(\`player\${i}_revives\`).value) || 0,
+                    accuracy: parseFloat(document.getElementById(\`player\${i}_accuracy\`).value) || 0,
+                    damageToPlayers: parseInt(document.getElementById(\`player\${i}_damageToPlayers\`).value) || 0,
+                    damageTaken: parseInt(document.getElementById(\`player\${i}_damageTaken\`).value) || 0,
+                    distanceTraveled: parseInt(document.getElementById(\`player\${i}_distanceTraveled\`).value) || 0,
+                    hits: parseInt(document.getElementById(\`player\${i}_hits\`).value) || 0
                 }))
             };
 
@@ -403,6 +442,7 @@
             
             // Add each piece of data as separate form fields to match sheet columns exactly
             const fields = {
+                'school': formData.school,
                 'teamName': formData.teamName,
                 'date': formData.date,
                 'gameMode': formData.gameMode,
@@ -465,7 +505,7 @@
             // Listen for iframe load to know when submission is complete
             iframe.onload = function() {
                 setTimeout(() => {
-                    showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points. Check your Google Sheet to confirm.`);
+                    showStatus(\`Success! Data submitted for \${formData.teamName} with \${formData.totalPoints} points. Check your Google Sheet to confirm.\`);
                     document.body.removeChild(form);
                     document.body.removeChild(iframe);
                 }, 1000);
