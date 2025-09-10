@@ -251,12 +251,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Team Summary (full width below results) -->
-            <div class="md:col-span-3 mt-6">
-                <div class="bg-white rounded-xl shadow-lg p-6">
+                <!-- Team Summary (full width below results) -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Team Summary</h3>
                     <div id="teamSummary">
                         <p class="text-gray-600">Fill out the form to see team statistics...</p>
@@ -287,57 +284,57 @@
         function updateSummary() {
             const placement = parseInt(document.getElementById('teamPlacement').value) || 0;
             const eliminations = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_eliminations\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_eliminations`).value) || 0);
             }, 0);
             
             const assists = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_assists\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_assists`).value) || 0);
             }, 0);
             
             const revives = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_revives\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_revives`).value) || 0);
             }, 0);
             
             // Calculate average accuracy (only count players with accuracy > 0)
-            const validAccuracies = [1, 2, 3, 4].map(i => parseFloat(document.getElementById(\`player\${i}_accuracy\`).value) || 0).filter(acc => acc > 0);
+            const validAccuracies = [1, 2, 3, 4].map(i => parseFloat(document.getElementById(`player${i}_accuracy`).value) || 0).filter(acc => acc > 0);
             const avgAccuracy = validAccuracies.length > 0 ? (validAccuracies.reduce((sum, acc) => sum + acc, 0) / validAccuracies.length).toFixed(1) : 0;
             
             const damageToPlayers = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_damageToPlayers\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_damageToPlayers`).value) || 0);
             }, 0);
             
             const damageTaken = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_damageTaken\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_damageTaken`).value) || 0);
             }, 0);
             
             const distanceTraveled = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_distanceTraveled\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_distanceTraveled`).value) || 0);
             }, 0);
             
             const hits = [1, 2, 3, 4].reduce((sum, i) => {
-                return sum + (parseInt(document.getElementById(\`player\${i}_hits\`).value) || 0);
+                return sum + (parseInt(document.getElementById(`player${i}_hits`).value) || 0);
             }, 0);
             
             const placementPoints = placement ? getPlacementPoints(placement) : 0;
             const eliminationPoints = getEliminationPoints(eliminations);
             const totalPoints = placementPoints + eliminationPoints;
 
-            document.getElementById('teamSummary').innerHTML = \`
+            document.getElementById('teamSummary').innerHTML = `
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-blue-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-blue-600">\${placement || '--'}</div>
+                        <div class="text-2xl font-bold text-blue-600">${placement || '--'}</div>
                         <div class="text-sm text-blue-600">Team Placement</div>
                     </div>
                     <div class="bg-green-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-green-600">\${eliminations}</div>
+                        <div class="text-2xl font-bold text-green-600">${eliminations}</div>
                         <div class="text-sm text-green-600">Total Eliminations</div>
                     </div>
                     <div class="bg-yellow-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-yellow-600">\${placementPoints}</div>
+                        <div class="text-2xl font-bold text-yellow-600">${placementPoints}</div>
                         <div class="text-sm text-yellow-600">Placement Points</div>
                     </div>
                     <div class="bg-purple-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-purple-600">\${totalPoints}</div>
+                        <div class="text-2xl font-bold text-purple-600">${totalPoints}</div>
                         <div class="text-sm text-purple-600">Total Points</div>
                     </div>
                 </div>
@@ -346,36 +343,36 @@
                     <h4 class="text-md font-semibold text-gray-700 mb-3">Detailed Team Statistics</h4>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
                         <div class="bg-red-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-red-600">\${assists}</div>
+                            <div class="text-xl font-bold text-red-600">${assists}</div>
                             <div class="text-xs text-red-600">Total Assists</div>
                         </div>
                         <div class="bg-green-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-green-600">\${revives}</div>
+                            <div class="text-xl font-bold text-green-600">${revives}</div>
                             <div class="text-xs text-green-600">Total Revives</div>
                         </div>
                         <div class="bg-blue-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-blue-600">\${avgAccuracy}%</div>
+                            <div class="text-xl font-bold text-blue-600">${avgAccuracy}%</div>
                             <div class="text-xs text-blue-600">Avg Accuracy</div>
                         </div>
                         <div class="bg-orange-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-orange-600">\${damageToPlayers.toLocaleString()}</div>
+                            <div class="text-xl font-bold text-orange-600">${damageToPlayers.toLocaleString()}</div>
                             <div class="text-xs text-orange-600">Player Damage</div>
                         </div>
                         <div class="bg-indigo-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-indigo-600">\${damageTaken.toLocaleString()}</div>
+                            <div class="text-xl font-bold text-indigo-600">${damageTaken.toLocaleString()}</div>
                             <div class="text-xs text-indigo-600">Damage Taken</div>
                         </div>
                         <div class="bg-purple-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-purple-600">\${distanceTraveled.toLocaleString()}</div>
+                            <div class="text-xl font-bold text-purple-600">${distanceTraveled.toLocaleString()}</div>
                             <div class="text-xs text-purple-600">Distance Traveled</div>
                         </div>
                         <div class="bg-pink-50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-pink-600">\${hits}</div>
+                            <div class="text-xl font-bold text-pink-600">${hits}</div>
                             <div class="text-xs text-pink-600">Total Hits</div>
                         </div>
                     </div>
                 </div>
-            \`;
+            `;
         }
 
         // Add event listeners for real-time updates
@@ -383,14 +380,20 @@
         
         function showStatus(message, isError = false) {
             const status = document.getElementById('status');
-            status.className = \`mt-4 p-3 rounded-lg \${isError ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}\`;
+            status.className = `mt-4 p-3 rounded-lg ${isError ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`;
             status.textContent = message;
             status.classList.remove('hidden');
         }
 
         function saveResults() {
+            const school = document.getElementById('school').value;
             const teamName = document.getElementById('teamName').value;
             const teamPlacement = document.getElementById('teamPlacement').value;
+            
+            if (!school.trim()) {
+                showStatus('Error: Please select a school', true);
+                return;
+            }
             
             if (!teamName.trim()) {
                 showStatus('Error: Please enter a team name', true);
@@ -404,20 +407,21 @@
 
             // Collect all data
             const formData = {
+                school: school,
                 teamName: teamName,
                 date: document.getElementById('date').value,
                 gameMode: document.getElementById('gameMode').value,
                 teamPlacement: parseInt(teamPlacement),
                 players: [1, 2, 3, 4].map(i => ({
-                    gamerTag: document.getElementById(\`player\${i}_gamerTag\`).value || '',
-                    eliminations: parseInt(document.getElementById(\`player\${i}_eliminations\`).value) || 0,
-                    assists: parseInt(document.getElementById(\`player\${i}_assists\`).value) || 0,
-                    revives: parseInt(document.getElementById(\`player\${i}_revives\`).value) || 0,
-                    accuracy: parseFloat(document.getElementById(\`player\${i}_accuracy\`).value) || 0,
-                    damageToPlayers: parseInt(document.getElementById(\`player\${i}_damageToPlayers\`).value) || 0,
-                    damageTaken: parseInt(document.getElementById(\`player\${i}_damageTaken\`).value) || 0,
-                    distanceTraveled: parseInt(document.getElementById(\`player\${i}_distanceTraveled\`).value) || 0,
-                    hits: parseInt(document.getElementById(\`player\${i}_hits\`).value) || 0
+                    gamerTag: document.getElementById(`player${i}_gamerTag`).value || '',
+                    eliminations: parseInt(document.getElementById(`player${i}_eliminations`).value) || 0,
+                    assists: parseInt(document.getElementById(`player${i}_assists`).value) || 0,
+                    revives: parseInt(document.getElementById(`player${i}_revives`).value) || 0,
+                    accuracy: parseFloat(document.getElementById(`player${i}_accuracy`).value) || 0,
+                    damageToPlayers: parseInt(document.getElementById(`player${i}_damageToPlayers`).value) || 0,
+                    damageTaken: parseInt(document.getElementById(`player${i}_damageTaken`).value) || 0,
+                    distanceTraveled: parseInt(document.getElementById(`player${i}_distanceTraveled`).value) || 0,
+                    hits: parseInt(document.getElementById(`player${i}_hits`).value) || 0
                 }))
             };
 
@@ -505,7 +509,7 @@
             // Listen for iframe load to know when submission is complete
             iframe.onload = function() {
                 setTimeout(() => {
-                    showStatus(\`Success! Data submitted for \${formData.teamName} with \${formData.totalPoints} points. Check your Google Sheet to confirm.\`);
+                    showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points. Check your Google Sheet to confirm.`);
                     document.body.removeChild(form);
                     document.body.removeChild(iframe);
                 }, 1000);
@@ -514,8 +518,15 @@
             form.submit();
         }
 
-        // Initialize summary
+        // Initialize summary and set current date
         updateSummary();
+        
+        // Set today's date in the date field
+        const today = new Date();
+        const formattedDate = today.getFullYear() + '-' + 
+            String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+            String(today.getDate()).padStart(2, '0');
+        document.getElementById('date').value = formattedDate;
     </script>
 </body>
 </html>
