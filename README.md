@@ -4,7 +4,7 @@ A web-based form for entering Fortnite match results for the Kern Scholastic Esp
 
 ## Live Form Access
 
-**Students and Coaches:** Access the form at: [[https://erikmadams.github.io/ksel-fortnite-results](https://erikmadams.github.io/ksel-fortnite-results/)]
+**Students and Coaches:** Access the form at: [[Match Results Form](https://erikmadams.github.io/ksel-fortnite-results/)]
 
 ## What This Form Does
 
@@ -36,8 +36,9 @@ This form allows teams to quickly enter match results including:
 ## How to Use
 
 1. **Fill in Match Information**
+   - Select your school
    - Enter your team name (Liberty Squad 1)
-   - Select the date
+   - Select the date (Current date is automatically populated)
    - Choose game mode (Battle Royale or Zero Build)
 
 2. **Enter Team Placement**
@@ -58,7 +59,7 @@ This form allows teams to quickly enter match results including:
 - **Accuracy:** Enter as a percentage (e.g., 45.2 for 45.2%)
 - **Damage:** Enter whole numbers without commas
 - **Required Fields:** ALL FIELDS ARE REQUIRED
-- **Real-time Updates:** Team summary updates as you type at the bottom
+- **Real-time Updates:** Team summary updates automactiall at the bottom as you type
 
 ## 🔧 Technical Details
 
