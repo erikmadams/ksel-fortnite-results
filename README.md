@@ -96,12 +96,11 @@ For technical issues or questions about the form:
 - Report issues on the [GitHub Issues](https://github.com/erikmadams/ksel-fortnite-results/issues) page
 - Email: erik_adams@kernhigh.org
 
-## Updates
+## Version History
+- v1.0: Initial release with all current features
 
-This form is regularly updated to improve functionality. Bookmark the URL above for the latest version.
+## Support
+For technical support or feature requests, contact the KSEL leadership team.
 
----
-
-**Last Updated:** September 2025  
-**Version:** 1.0  
-**League:** Kern Scholastic Esports League (KSEL)
+## License
+Developed for Kern Scholastic Esports League by LeagueHQ developers.  For KSEL internal use only.
