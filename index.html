@@ -394,10 +394,49 @@
             status.classList.remove('hidden');
         }
 
-        function saveResults() {
+        async function checkForDuplicate(teamName, date, gameMode) {
+            try {
+                // Fetch existing data from Google Sheet (replace with your published CSV URL)
+                const sheetUrl = 'YOUR_PUBLISHED_GOOGLE_SHEET_CSV_URL_HERE';
+                const response = await fetch(sheetUrl);
+                const csvText = await response.text();
+                
+                // Parse CSV data
+                const lines = csvText.split('\n');
+                
+                // Skip header row and check each data row
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // Parse CSV line (handles quoted values)
+                    const columns = line.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g) || [];
+                    const existingTeamName = (columns[1] || '').trim().replace(/^"|"$/g, ''); // Team Name column (index 1)
+                    const existingDate = (columns[2] || '').trim().replace(/^"|"$/g, ''); // Date column (index 2)
+                    const existingGameMode = (columns[3] || '').trim().replace(/^"|"$/g, ''); // Game Mode column (index 3)
+                    
+                    // Check if all three fields match
+                    if (existingTeamName === teamName && 
+                        existingDate === date && 
+                        existingGameMode === gameMode) {
+                        return true; // Duplicate found
+                    }
+                }
+                
+                return false; // No duplicate found
+            } catch (error) {
+                console.error('Error checking for duplicates:', error);
+                // If we can't check, allow submission but warn user
+                return false;
+            }
+        }
+
+        async function saveResults() {
             const school = document.getElementById('school').value;
             const teamName = document.getElementById('teamName').value;
             const teamPlacement = document.getElementById('teamPlacement').value;
+            const date = document.getElementById('date').value;
+            const gameMode = document.getElementById('gameMode').value;
             
             if (!school.trim()) {
                 showStatus('Error: Please select a school', true);
@@ -414,12 +453,21 @@
                 return;
             }
 
+            // Check for duplicate entry
+            showStatus('Checking for existing entries...');
+            const isDuplicate = await checkForDuplicate(teamName, date, gameMode);
+            
+            if (isDuplicate) {
+                showStatus(`Error: An entry for ${teamName} on ${date} in ${gameMode} mode already exists. Please check your previous submissions.`, true);
+                return;
+            }
+
             // Collect all data
             const formData = {
                 school: school,
                 teamName: teamName,
-                date: document.getElementById('date').value,
-                gameMode: document.getElementById('gameMode').value,
+                date: date,
+                gameMode: gameMode,
                 teamPlacement: parseInt(teamPlacement),
                 players: [1, 2, 3, 4].map(i => ({
                     gamerTag: document.getElementById(`player${i}_gamerTag`).value || '',
