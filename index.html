@@ -439,7 +439,7 @@
             formData.totalEliminations = totalEliminations;
             formData.totalPoints = getPlacementPoints(formData.teamPlacement) + getEliminationPoints(totalEliminations);
 
-            showStatus('Submitting to Google Sheet...');
+            showStatus('Submitting to the BattleBus Backend...');
 
             // Create an iframe to submit the data (bypasses CORS)
             const iframe = document.createElement('iframe');
