@@ -508,7 +508,20 @@
 
             showStatus('Submitting to the BattleBus Backend...');
 
-            // Create an iframe to submit the data (bypasses CORS)
+            // Listen for messages from the iframe
+            window.addEventListener('message', function(event) {
+                const data = event.data;
+                
+                if (data.status === 'duplicate') {
+                    showStatus(`Error: An entry for "${data.teamName}" on ${data.date} in ${data.gameMode} mode already exists. Please check your previous submissions.`, true);
+                } else if (data.status === 'success') {
+                    showStatus(`Success! Data submitted for ${data.teamName} with ${data.totalPoints} points.`);
+                } else if (data.status === 'error') {
+                    showStatus(`Error: ${data.message}`, true);
+                }
+            }, {once: true});
+
+            // Create an iframe to submit the data
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
             iframe.name = 'submitFrame';
@@ -520,7 +533,7 @@
             form.action = 'https://script.google.com/macros/s/AKfycbwcsPlxJ-B0BnIK7mkPmwnWPJFkzWgoygfWsviMrzeBtrHtzfpzPiTI3alooIR9En0x/exec';
             form.target = 'submitFrame';
             
-            // Add each piece of data as separate form fields to match sheet columns exactly
+            // Add each piece of data as separate form fields
             const fields = {
                 'school': formData.school,
                 'teamName': formData.teamName,
@@ -581,34 +594,13 @@
             }
             
             document.body.appendChild(form);
-            
-            // Listen for iframe load to know when submission is complete
-            iframe.onload = function() {
-                setTimeout(() => {
-                    try {
-                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        const responseText = iframeDoc.body.textContent;
-                        
-                        if (responseText.includes('DUPLICATE')) {
-                            showStatus(`Error: An entry for "${formData.teamName}" on ${formData.date} in ${formData.gameMode} mode already exists. Please check your previous submissions.`, true);
-                        } else if (responseText.includes('SUCCESS')) {
-                            showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
-                        } else if (responseText.includes('ERROR')) {
-                            showStatus(`Error: ${responseText}`, true);
-                        } else {
-                            showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
-                        }
-                    } catch (e) {
-                        // If we can't read iframe content (CORS), assume success
-                        showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
-                    }
-                    
-                    document.body.removeChild(form);
-                    document.body.removeChild(iframe);
-                }, 1000);
-            };
-            
             form.submit();
+            
+            // Cleanup after 5 seconds
+            setTimeout(() => {
+                if (document.body.contains(form)) document.body.removeChild(form);
+                if (document.body.contains(iframe)) document.body.removeChild(iframe);
+            }, 5000);
         }
 
         // Initialize summary and set current date
