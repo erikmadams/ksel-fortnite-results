@@ -397,7 +397,7 @@
         async function checkForDuplicate(teamName, date, gameMode) {
             try {
                 // Fetch existing data from Google Sheet (replace with your published CSV URL)
-                const sheetUrl = 'YOUR_PUBLISHED_GOOGLE_SHEET_CSV_URL_HERE';
+                const sheetUrl = 'https://script.google.com/macros/s/AKfycbwcsPlxJ-B0BnIK7mkPmwnWPJFkzWgoygfWsviMrzeBtrHtzfpzPiTI3alooIR9En0x/exec';
                 const response = await fetch(sheetUrl);
                 const csvText = await response.text();
                 
