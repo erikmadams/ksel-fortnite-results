@@ -151,9 +151,6 @@
                             <span>Per Elimination</span>
                             <span class="font-bold text-blue-600">4 points</span>
                         </div>
-                        <div class="text-xs text-gray-500 p-2 bg-gray-50 rounded">
-                            Max 50 points from eliminations
-                        </div>
                     </div>
                 </div>
             </div>
@@ -290,7 +287,7 @@
         }
 
         function getEliminationPoints(eliminations) {
-            return Math.min(eliminations * 4, 50);
+            return eliminations * 4;
         }
 
         function updateSummary() {
