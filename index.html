@@ -396,33 +396,61 @@
 
         async function checkForDuplicate(teamName, date, gameMode) {
             try {
-                // Fetch existing data from Google Sheet (replace with your published CSV URL)
+                // Fetch existing data from Google Sheet using CORS proxy
                 const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS2WOF19jlQP7CuF1eG7rzVxEZybL6637Lo6lhZluKscRDl2VcIoMi_FPIkTM6PWeyXzLWDUc7amqO2/pub?gid=0&single=true&output=csv';
-                const response = await fetch(sheetUrl);
-                const csvText = await response.text();
+                const proxyUrl = 'https://corsproxy.io/?';
+                const response = await fetch(proxyUrl + encodeURIComponent(sheetUrl));
                 
-                // Parse CSV data
+                if (!response.ok) {
+                    console.error('Failed to fetch sheet data:', response.status);
+                    return false;
+                }
+                
+                const csvText = await response.text();
+                console.log('Fetched CSV data, checking for duplicates...');
+                
+                // Split into lines
                 const lines = csvText.split('\n');
                 
-                // Skip header row and check each data row
+                // Skip header row (index 0) and check each data row
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
                     
-                    // Parse CSV line (handles quoted values)
-                    const columns = line.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g) || [];
-                    const existingTeamName = (columns[1] || '').trim().replace(/^"|"$/g, ''); // Team Name column (index 1)
-                    const existingDate = (columns[2] || '').trim().replace(/^"|"$/g, ''); // Date column (index 2)
-                    const existingGameMode = (columns[3] || '').trim().replace(/^"|"$/g, ''); // Game Mode column (index 3)
+                    // Split by comma, but handle quoted values properly
+                    const columns = [];
+                    let currentCol = '';
+                    let insideQuotes = false;
+                    
+                    for (let char of line) {
+                        if (char === '"') {
+                            insideQuotes = !insideQuotes;
+                        } else if (char === ',' && !insideQuotes) {
+                            columns.push(currentCol.trim());
+                            currentCol = '';
+                        } else {
+                            currentCol += char;
+                        }
+                    }
+                    columns.push(currentCol.trim()); // Push the last column
+                    
+                    // Extract the relevant columns (School=0, TeamName=1, Date=2, GameMode=3)
+                    const existingTeamName = columns[1] || '';
+                    const existingDate = columns[2] || '';
+                    const existingGameMode = columns[3] || '';
+                    
+                    console.log(`Checking row ${i}: Team="${existingTeamName}", Date="${existingDate}", Mode="${existingGameMode}"`);
                     
                     // Check if all three fields match
                     if (existingTeamName === teamName && 
                         existingDate === date && 
                         existingGameMode === gameMode) {
+                        console.log('DUPLICATE FOUND!');
                         return true; // Duplicate found
                     }
                 }
                 
+                console.log('No duplicate found, submission allowed.');
                 return false; // No duplicate found
             } catch (error) {
                 console.error('Error checking for duplicates:', error);
@@ -450,15 +478,6 @@
             
             if (!teamPlacement) {
                 showStatus('Error: Please enter team placement', true);
-                return;
-            }
-
-            // Check for duplicate entry
-            showStatus('Checking for existing entries...');
-            const isDuplicate = await checkForDuplicate(teamName, date, gameMode);
-            
-            if (isDuplicate) {
-                showStatus(`Error: An entry for ${teamName} on ${date} in ${gameMode} mode already exists. Please check your previous submissions.`, true);
                 return;
             }
 
@@ -566,7 +585,24 @@
             // Listen for iframe load to know when submission is complete
             iframe.onload = function() {
                 setTimeout(() => {
-                    showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const responseText = iframeDoc.body.textContent;
+                        
+                        if (responseText.includes('DUPLICATE')) {
+                            showStatus(`Error: An entry for "${formData.teamName}" on ${formData.date} in ${formData.gameMode} mode already exists. Please check your previous submissions.`, true);
+                        } else if (responseText.includes('SUCCESS')) {
+                            showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
+                        } else if (responseText.includes('ERROR')) {
+                            showStatus(`Error: ${responseText}`, true);
+                        } else {
+                            showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
+                        }
+                    } catch (e) {
+                        // If we can't read iframe content (CORS), assume success
+                        showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
+                    }
+                    
                     document.body.removeChild(form);
                     document.body.removeChild(iframe);
                 }, 1000);
