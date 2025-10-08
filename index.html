@@ -439,7 +439,7 @@
             formData.totalEliminations = totalEliminations;
             formData.totalPoints = getPlacementPoints(formData.teamPlacement) + getEliminationPoints(totalEliminations);
 
-            showStatus('Submitting to the BattleBus Backend...');
+            showStatus('Submitting your team results to the BattleBus Backend...');
 
             // Create an iframe to submit the data (bypasses CORS)
             const iframe = document.createElement('iframe');
@@ -523,8 +523,16 @@
                     document.body.removeChild(iframe);
                 }, 1000);
             };
-            
+
+            //Submit the form
             form.submit();
+
+            // Wait for submission to complete (Google Apps Script typically responds within 2-3 seconds)
+            setTimeout(() => {
+                showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }, 3000);
         }
 
         // Initialize summary and set current date
