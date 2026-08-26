@@ -278,13 +278,11 @@
         // This is a soft check only — it never blocks saving, it just flags
         // a tag that doesn't appear to be a real Fortnite account.
         //
-        // Uses JSONP (a <script> tag) instead of fetch(), because Apps
-        // Script's ContentService responses don't carry the CORS headers a
-        // normal fetch() needs to read a cross-origin response — script
-        // tags aren't subject to that restriction, so this works reliably
-        // where fetch() could not.
-        let ksel_jsonpCounter = 0;
-
+        // Loads the result in a hidden <iframe> and listens for postMessage
+        // instead of using fetch() or a JSONP <script> tag — both of those
+        // were tried and both failed on Apps Script's responses (missing
+        // CORS headers for fetch(), a blocked script MIME type for JSONP).
+        // postMessage is unaffected by either problem.
         function verifyGamerTag(playerNum) {
             const input = document.getElementById(`player${playerNum}_gamerTag`);
             const statusEl = document.getElementById(`player${playerNum}_tagStatus`);
@@ -298,11 +296,10 @@
             statusEl.textContent = 'Checking...';
             statusEl.className = 'text-xs whitespace-nowrap text-gray-400';
 
-            const callbackName = `ksel_fortniteTagCallback_${ksel_jsonpCounter++}`;
-            const script = document.createElement('script');
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
 
-            // Safety timeout in case the callback never fires (e.g. the
-            // request never reaches the server at all).
+            // Safety timeout in case no response ever arrives.
             const timeoutId = setTimeout(() => {
                 cleanup();
                 statusEl.textContent = '';
@@ -310,11 +307,26 @@
 
             function cleanup() {
                 clearTimeout(timeoutId);
-                delete window[callbackName];
-                script.remove();
+                window.removeEventListener('message', handleMessage);
+                iframe.remove();
             }
 
-            window[callbackName] = function (result) {
+            function handleMessage(event) {
+                // Only accept a message that actually came from the iframe
+                // we just created for this specific check.
+                if (event.source !== iframe.contentWindow) return;
+
+                let result = event.data;
+                if (typeof result === 'string') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch (err) {
+                        cleanup();
+                        statusEl.textContent = '';
+                        return;
+                    }
+                }
+
                 cleanup();
 
                 if (!result || !result.checked) {
@@ -331,15 +343,12 @@
                     statusEl.textContent = '✗ Not found';
                     statusEl.className = 'text-xs whitespace-nowrap text-red-600 font-medium';
                 }
-            };
+            }
 
-            script.onerror = () => {
-                cleanup();
-                statusEl.textContent = '';
-            };
+            window.addEventListener('message', handleMessage);
 
-            script.src = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}&callback=${callbackName}`;
-            document.body.appendChild(script);
+            iframe.src = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}`;
+            document.body.appendChild(iframe);
         }
 
         // Scoring functions
