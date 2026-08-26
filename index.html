@@ -283,6 +283,14 @@
         // were tried and both failed on Apps Script's responses (missing
         // CORS headers for fetch(), a blocked script MIME type for JSONP).
         // postMessage is unaffected by either problem.
+        //
+        // Each request gets a unique ID that Apps Script echoes back in its
+        // response, and we match on that ID rather than comparing window
+        // objects — Apps Script wraps its HTML output in its own extra
+        // sandbox iframe, which makes the "did this come from the iframe I
+        // created" window check unreliable.
+        let ksel_verifyRequestCounter = 0;
+
         function verifyGamerTag(playerNum) {
             const input = document.getElementById(`player${playerNum}_gamerTag`);
             const statusEl = document.getElementById(`player${playerNum}_tagStatus`);
@@ -296,6 +304,7 @@
             statusEl.textContent = 'Checking...';
             statusEl.className = 'text-xs whitespace-nowrap text-gray-400';
 
+            const requestId = `p${playerNum}_${++ksel_verifyRequestCounter}`;
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
 
@@ -312,20 +321,19 @@
             }
 
             function handleMessage(event) {
-                // Only accept a message that actually came from the iframe
-                // we just created for this specific check.
-                if (event.source !== iframe.contentWindow) return;
-
                 let result = event.data;
                 if (typeof result === 'string') {
                     try {
                         result = JSON.parse(result);
                     } catch (err) {
-                        cleanup();
-                        statusEl.textContent = '';
-                        return;
+                        return; // not JSON — not a message meant for us, ignore
                     }
                 }
+
+                // Only accept a message that matches the request we just
+                // sent (ignores unrelated messages, and correctly routes
+                // Player 1 / Player 2 checks even if both are in flight).
+                if (!result || result.requestId !== requestId) return;
 
                 cleanup();
 
@@ -347,7 +355,7 @@
 
             window.addEventListener('message', handleMessage);
 
-            iframe.src = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}`;
+            iframe.src = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}&requestId=${encodeURIComponent(requestId)}`;
             document.body.appendChild(iframe);
         }
 
