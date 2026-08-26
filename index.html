@@ -275,7 +275,15 @@
         // to a Fortnite stats API so no API key is exposed in this page).
         // This is a soft check only — it never blocks saving, it just flags
         // a tag that doesn't appear to be a real Fortnite account.
-        async function verifyGamerTag(playerNum) {
+        //
+        // Uses JSONP (a <script> tag) instead of fetch(), because Apps
+        // Script's ContentService responses don't carry the CORS headers a
+        // normal fetch() needs to read a cross-origin response — script
+        // tags aren't subject to that restriction, so this works reliably
+        // where fetch() could not.
+        let ksel_jsonpCounter = 0;
+
+        function verifyGamerTag(playerNum) {
             const input = document.getElementById(`player${playerNum}_gamerTag`);
             const statusEl = document.getElementById(`player${playerNum}_tagStatus`);
             const tag = input.value.trim();
@@ -288,12 +296,26 @@
             statusEl.textContent = 'Checking...';
             statusEl.className = 'text-xs whitespace-nowrap text-gray-400';
 
-            try {
-                const url = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}`;
-                const response = await fetch(url);
-                const result = await response.json();
+            const callbackName = `ksel_fortniteTagCallback_${ksel_jsonpCounter++}`;
+            const script = document.createElement('script');
 
-                if (!result.checked) {
+            // Safety timeout in case the callback never fires (e.g. the
+            // request never reaches the server at all).
+            const timeoutId = setTimeout(() => {
+                cleanup();
+                statusEl.textContent = '';
+            }, 8000);
+
+            function cleanup() {
+                clearTimeout(timeoutId);
+                delete window[callbackName];
+                script.remove();
+            }
+
+            window[callbackName] = function (result) {
+                cleanup();
+
+                if (!result || !result.checked) {
                     // Backend isn't configured yet, or the lookup service was
                     // unreachable — don't scare anyone off with a false negative.
                     statusEl.textContent = '';
@@ -307,10 +329,15 @@
                     statusEl.textContent = '✗ Not found';
                     statusEl.className = 'text-xs whitespace-nowrap text-red-600 font-medium';
                 }
-            } catch (err) {
-                // Network hiccup, CORS not enabled yet, etc. — fail silently.
+            };
+
+            script.onerror = () => {
+                cleanup();
                 statusEl.textContent = '';
-            }
+            };
+
+            script.src = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}&callback=${callbackName}`;
+            document.body.appendChild(script);
         }
 
         // Scoring functions
