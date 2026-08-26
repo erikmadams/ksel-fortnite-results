@@ -535,9 +535,16 @@
             form.method = 'POST';
             form.action = SCRIPT_URL;
             form.target = 'submitFrame';
-            
+
+            // Uniquely tags this submission so we can match Apps Script's
+            // response (via postMessage, same technique as the gamer tag
+            // check) back to this specific save — same reasoning as
+            // verifyGamerTag's requestId.
+            const saveRequestId = `save_${++ksel_verifyRequestCounter}`;
+
             // Add each piece of data as separate form fields to match sheet columns exactly
             const fields = {
+                'requestId': saveRequestId,
                 'school': formData.school,
                 'teamName': formData.teamName,
                 'date': formData.date,
@@ -577,25 +584,57 @@
             }
             
             document.body.appendChild(form);
-            
-            // Listen for iframe load to know when submission is complete
-            iframe.onload = function() {
-                setTimeout(() => {
+
+            // Apps Script's doPost now reports back what actually happened
+            // (success or the real error) via postMessage, the same
+            // technique used for the gamer tag check — this used to be a
+            // blind fire-and-forget submit that showed "Success!" no matter
+            // what actually happened server-side, which is why a failed
+            // save could look identical to a working one.
+            let finished = false;
+            function finishOnce() {
+                if (finished) return;
+                finished = true;
+                window.removeEventListener('message', handleSaveMessage);
+                clearTimeout(timeoutId);
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }
+
+            function handleSaveMessage(event) {
+                let result = event.data;
+                if (typeof result === 'string') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch (err) {
+                        return; // not JSON — not meant for us
+                    }
+                }
+
+                if (!result || result.requestId !== saveRequestId) return;
+
+                finishOnce();
+
+                if (result.success) {
                     showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
-                    document.body.removeChild(form);
-                    document.body.removeChild(iframe);
-                }, 1000);
-            };
+                } else {
+                    showStatus(`Error: the save did not go through. ${result.error || 'Unknown error — check the Apps Script Executions log.'}`, true);
+                }
+            }
+
+            window.addEventListener('message', handleSaveMessage);
+
+            // Fallback in case no response ever arrives (e.g. an older
+            // Apps Script deployment that doesn't send one back yet) —
+            // shows an honest "couldn't confirm" message instead of
+            // claiming success we don't actually know happened.
+            const timeoutId = setTimeout(() => {
+                finishOnce();
+                showStatus(`Submitted for ${formData.teamName}, but could not confirm it saved — please check the Google Sheet.`, true);
+            }, 8000);
 
             //Submit the form
             form.submit();
-
-            // Wait for submission to complete (Google Apps Script typically responds within 2-3 seconds)
-            setTimeout(() => {
-                showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
-                document.body.removeChild(form);
-                document.body.removeChild(iframe);
-            }, 3000);
         }
 
         // Initialize summary and set current date
