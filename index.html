@@ -18,14 +18,14 @@
                         KSEL
                     </div>
                 </div>
-                
+
                 <div class="flex-1 text-center">
-                    <h1 class="text-3xl font-bold text-gray-800">Match Results Entry</h1>
-                    <p class="text-gray-600">Enter Duo Player and Team results</p>
+                    <h1 id="pageTitle" class="text-3xl font-bold text-gray-800">Match Results Entry</h1>
+                    <p id="pageSubtitle" class="text-gray-600">Enter Duo Player and Team results</p>
                 </div>
-                
-                <div class="flex gap-2">
-                    <button 
+
+                <div id="matchEntryButtons" class="flex gap-2">
+                    <button
                         onclick="saveResults()"
                         class="text-white px-6 rounded-lg inline-flex items-center justify-center text-center gap-2 font-medium transition-colors hover:opacity-90 h-11"
                         style="background-color: #EE2A3E"
@@ -34,6 +34,1015 @@
                         Save Results
                     </button>
                     <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 rounded-lg inline-flex items-center justify-center text-center gap-2 font-medium transition-colors h-11">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <div id="status" class="hidden mt-4 p-3 rounded-lg"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- MATCH ENTRY VIEW (default) -->
+        <!-- ============================================================ -->
+        <div id="matchEntryView">
+            <!-- Two-panel grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Match Information Panel (1 column) -->
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 text-left flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-red-600"></i>
+                            Match Information
+                        </h2>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">School</label>
+                                <select
+                                    id="school" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                >
+                                    <option value="">Select School...</option>
+                                    <option value="Arvin">Arvin</option>
+                                    <option value="Bakersfield High">Bakersfield High</option>
+                                    <option value="Bakersfield Christian">Bakersfield Christian</option>
+                                    <option value="Centennial">Centennial</option>
+                                    <option value="Central Valley">Central Valley</option>
+                                    <option value="Cesar Chavez">Cesar Chavez</option>
+                                    <option value="Del Oro">Del Oro</option>
+                                    <option value="Delano High">Delano High</option>
+                                    <option value="East High">East High</option>
+                                    <option value="Foothill">Foothill</option>
+                                    <option value="Frontier">Frontier</option>
+                                    <option value="Golden Valley">Golden Valley</option>
+                                    <option value="Highland">Highland</option>
+                                    <option value="Independence">Independence</option>
+                                    <option value="Kern Valley">Kern Valley</option>
+                                    <option value="Liberty">Liberty</option>
+                                    <option value="Mira Monte">Mira Monte</option>
+                                    <option value="North">North</option>
+                                    <option value="Ridgeview">Ridgeview</option>
+                                    <option value="Robert F Kennedy">Robert F Kennedy</option>
+                                    <option value="Shafter">Shafter</option>
+                                    <option value="South">South</option>
+                                    <option value="Stockdale">Stockdale</option>
+                                    <option value="Tierra Del Sol">Tierra Del Sol</option>
+                                    <option value="Valley High">Valley High</option>
+                                    <option value="Vista">Vista</option>
+                                    <option value="Vista West">Vista West</option>
+                                    <option value="Wasco">Wasco</option>
+                                    <option value="West">West</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Team Name</label>
+                                    <!--
+                                        UPDATED: this used to be a static list of ~90 hardcoded
+                                        <option> placeholders (all schools' teams at once, several
+                                        with duplicate "TEST Team 2" values left over from testing).
+                                        It's now a single placeholder option; the real list for the
+                                        selected school is loaded live from the "Teams" tab in the
+                                        Google Sheet and filled in by populateTeamDropdown() below,
+                                        via the same iframe+postMessage technique already used for
+                                        gamer tag verification. Manage the roster from Team Roster
+                                        Admin (add "#admin" to the end of this page's URL).
+                                    -->
+                                    <select
+                                        id="teamName" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    >
+                                        <option value="">Select School first...</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                    <input
+                                        type="date"
+                                        id="date" value="2025-09-03" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Game Mode</label>
+                                <select
+                                    id="gameMode" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                >
+                                    <option>Battle Royale</option>
+                                    <option>Zero Build</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scoring Guide Panel (2 columns) as a SIBLING -->
+                <div class="md:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Scoring System</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between p-2 bg-yellow-50 rounded">
+                                <span class="font-medium">Victory Royale</span>
+                                <span class="font-bold text-yellow-600">25 points</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                <span>2nd - 9th</span>
+                                <span class="font-medium">20 points</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                <span>10th - 17th</span>
+                                <span class="font-medium">15 points</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                <span>18th - 35th</span>
+                                <span class="font-medium">10 points</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                <span>36th - 50th</span>
+                                <span class="font-medium">5 points</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-blue-50 rounded">
+                                <span>Per Elimination</span>
+                                <span class="font-bold text-blue-600">2 points</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Entry Panel (full width below) -->
+                <div class="md:col-span-3">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="mb-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-2 text-left flex items-center gap-2">
+                                <i data-lucide="users" class="w-5 h-5 text-red-600"></i>
+                                Team Results
+                            </h2>
+
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Team Placement</label>
+                                <input
+                                    type="number"
+                                    id="teamPlacement"
+                                    placeholder="Enter team placement (1-100)"
+                                    min="1"
+                                    max="100"
+                                    class="w-48 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="overflow-hidden rounded-lg border border-gray-200">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-700">Player</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-700">Gamer Tag</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Elims</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Assists</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Revives</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Accuracy</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Dmg to Players</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Dmg Taken</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Distance</th>
+                                            <th class="px-2 py-3 text-center text-xs font-medium text-gray-700">Hits</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-3 py-3"><span class="font-medium text-gray-800">Player 1</span></td>
+                                            <td class="px-3 py-3">
+                                                <div class="flex items-center gap-2">
+                                                    <input type="text" id="player1_gamerTag" placeholder="Enter gamer tag..." onblur="verifyGamerTag(1)" class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+                                                    <span id="player1_tagStatus" class="text-xs whitespace-nowrap"></span>
+                                                </div>
+                                            </td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_eliminations" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_assists" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_revives" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_accuracy" placeholder="0.0" step="0.1" min="0" max="100" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_damageToPlayers" placeholder="0" min="0" class="w-20 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_damageTaken" placeholder="0" min="0" class="w-20 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_distanceTraveled" placeholder="0" min="0" class="w-20 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player1_hits" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-3 py-3"><span class="font-medium text-gray-800">Player 2</span></td>
+                                            <td class="px-3 py-3">
+                                                <div class="flex items-center gap-2">
+                                                    <input type="text" id="player2_gamerTag" placeholder="Enter gamer tag..." onblur="verifyGamerTag(2)" class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+                                                    <span id="player2_tagStatus" class="text-xs whitespace-nowrap"></span>
+                                                </div>
+                                            </td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_eliminations" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_assists" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_revives" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_accuracy" placeholder="0.0" step="0.1" min="0" max="100" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_damageToPlayers" placeholder="0" min="0" class="w-20 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_damageTaken" placeholder="0" min="0" class="w-20 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_distanceTraveled" placeholder="0" min="0" class="w-20 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                            <td class="px-2 py-3"><input type="number" id="player2_hits" placeholder="0" min="0" class="w-16 border border-gray-300 rounded px-1 py-1 text-xs text-center focus:ring-2 focus:ring-red-500 focus:border-red-500" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Summary (full width below results) -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-gray-800">Team Summary</h3>
+                            <a
+                                href="https://erikmadams.github.io/fortnite-dashboard/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-white px-4 py-2 rounded-lg inline-flex items-center justify-center gap-2 font-medium transition-colors hover:opacity-90 text-sm"
+                                style="background-color: #EE2A3E"
+                            >
+                                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                                View Leaderboard
+                            </a>
+                        </div>
+                        <div id="teamSummary">
+                            <p class="text-gray-600">Fill out the form to see team statistics...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TEAM ROSTER ADMIN VIEW (reached via "#admin" on the URL,
+             same pattern as the Match Day Hub admin page) -->
+        <!-- ============================================================ -->
+        <div id="adminView" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+                <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                    <i data-lucide="shield" class="w-5 h-5 text-red-600"></i>
+                    Team Roster Admin
+                </h2>
+                <p class="text-gray-600 text-sm mb-6">
+                    Add or remove teams per school. This writes directly to the "Teams" tab in the
+                    Match Results Google Sheet (created automatically the first time it's needed),
+                    and controls what shows up in the Team Name dropdown on the Match Results Entry page.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">School</label>
+                        <select
+                            id="admin_school" class="h-11 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                        >
+                            <option value="">Select School...</option>
+                        </select>
+
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Add New Team</label>
+                            <div class="flex gap-2">
+                                <input
+                                    type="text"
+                                    id="admin_newTeamName"
+                                    placeholder="e.g. Arvin Team 4"
+                                    class="flex-1 h-11 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                />
+                                <button
+                                    onclick="addTeamAdmin()"
+                                    class="text-white px-4 rounded-lg font-medium transition-colors hover:opacity-90 h-11"
+                                    style="background-color: #EE2A3E"
+                                >
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="adminStatus" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Teams</label>
+                        <div id="adminTeamList" class="border border-gray-200 rounded-lg divide-y divide-gray-200 min-h-[120px] max-h-96 overflow-y-auto">
+                            <p class="text-gray-500 text-sm p-3">Select a school to see its teams.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t">
+                    <a href="#" onclick="window.location.hash=''; return false;" class="text-sm text-gray-500 hover:text-gray-700">
+                        &larr; Back to Match Results Entry
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Your Google Apps Script Web App URL (handles both saving results
+        // and, if configured, verifying gamer tags against Fortnite)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVO4uUxZ5VdYzGGXGPtNGqclTcArH1hVZfN8nJSAeUU65THhKA1QE6Y5uZOS0_DGoN/exec';
+
+        // Look up a gamer tag through the Apps Script backend (which proxies
+        // to a Fortnite stats API so no API key is exposed in this page).
+        // This is a soft check only — it never blocks saving, it just flags
+        // a tag that doesn't appear to be a real Fortnite account.
+        //
+        // Loads the result in a hidden <iframe> and listens for postMessage
+        // instead of using fetch() or a JSONP <script> tag — both of those
+        // were tried and both failed on Apps Script's responses (missing
+        // CORS headers for fetch(), a blocked script MIME type for JSONP).
+        // postMessage is unaffected by either problem.
+        //
+        // Each request gets a unique ID that Apps Script echoes back in its
+        // response, and we match on that ID rather than comparing window
+        // objects — Apps Script wraps its HTML output in its own extra
+        // sandbox iframe, which makes the "did this come from the iframe I
+        // created" window check unreliable.
+        let ksel_verifyRequestCounter = 0;
+
+        function verifyGamerTag(playerNum) {
+            const input = document.getElementById(`player${playerNum}_gamerTag`);
+            const statusEl = document.getElementById(`player${playerNum}_tagStatus`);
+            const tag = input.value.trim();
+
+            if (!tag) {
+                statusEl.textContent = '';
+                return;
+            }
+
+            statusEl.textContent = 'Checking...';
+            statusEl.className = 'text-xs whitespace-nowrap text-gray-400';
+
+            const requestId = `p${playerNum}_${++ksel_verifyRequestCounter}`;
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+
+            // Safety timeout in case no response ever arrives.
+            const timeoutId = setTimeout(() => {
+                cleanup();
+                statusEl.textContent = '';
+            }, 8000);
+
+            function cleanup() {
+                clearTimeout(timeoutId);
+                window.removeEventListener('message', handleMessage);
+                iframe.remove();
+            }
+
+            function handleMessage(event) {
+                let result = event.data;
+                if (typeof result === 'string') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch (err) {
+                        return; // not JSON — not a message meant for us, ignore
+                    }
+                }
+
+                // Only accept a message that matches the request we just
+                // sent (ignores unrelated messages, and correctly routes
+                // Player 1 / Player 2 checks even if both are in flight).
+                if (!result || result.requestId !== requestId) return;
+
+                cleanup();
+
+                if (!result || !result.checked) {
+                    // Backend isn't configured yet, or the lookup service was
+                    // unreachable — don't scare anyone off with a false negative.
+                    statusEl.textContent = '';
+                    return;
+                }
+
+                if (result.exists) {
+                    statusEl.textContent = '✓ Verified';
+                    statusEl.className = 'text-xs whitespace-nowrap text-green-600 font-medium';
+                } else {
+                    statusEl.textContent = '✗ Not found';
+                    statusEl.className = 'text-xs whitespace-nowrap text-red-600 font-medium';
+                }
+            }
+
+            window.addEventListener('message', handleMessage);
+
+            iframe.src = `${SCRIPT_URL}?action=verifyTag&tag=${encodeURIComponent(tag)}&requestId=${encodeURIComponent(requestId)}`;
+            document.body.appendChild(iframe);
+        }
+
+        // ------------------------------------------------------------------
+        // NEW: Team roster — loaded live from the "Teams" tab in the Sheet
+        // ------------------------------------------------------------------
+        // Same iframe + postMessage technique as verifyGamerTag/saveResults,
+        // just hitting a new "listTeams" action added to doGet(). Populated
+        // once on page load and re-populated after any admin add/remove.
+        let ksel_teamsBySchool = {};
+        let ksel_teamsLoaded = false;
+
+        function ksel_normalizeTeams(teams) {
+            const bySchool = {};
+            (teams || []).forEach(t => {
+                if (!t || !t.school || !t.team) return;
+                if (!bySchool[t.school]) bySchool[t.school] = [];
+                bySchool[t.school].push(t.team);
+            });
+            Object.keys(bySchool).forEach(school => {
+                bySchool[school].sort((a, b) => a.localeCompare(b));
+            });
+            return bySchool;
+        }
+
+        function fetchTeams(onDone) {
+            const requestId = `teams_${++ksel_verifyRequestCounter}`;
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+
+            const timeoutId = setTimeout(() => {
+                cleanup();
+                if (onDone) onDone(false);
+            }, 8000);
+
+            function cleanup() {
+                clearTimeout(timeoutId);
+                window.removeEventListener('message', handleMessage);
+                iframe.remove();
+            }
+
+            function handleMessage(event) {
+                let result = event.data;
+                if (typeof result === 'string') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch (err) {
+                        return;
+                    }
+                }
+                if (!result || result.requestId !== requestId) return;
+
+                cleanup();
+
+                if (result.success) {
+                    ksel_teamsBySchool = ksel_normalizeTeams(result.teams);
+                    ksel_teamsLoaded = true;
+                }
+                if (onDone) onDone(!!result.success);
+            }
+
+            window.addEventListener('message', handleMessage);
+            iframe.src = `${SCRIPT_URL}?action=listTeams&requestId=${encodeURIComponent(requestId)}`;
+            document.body.appendChild(iframe);
+        }
+
+        // Fills the Team Name dropdown with only the teams for the chosen
+        // school. Called on page load (once teams are fetched) and whenever
+        // the School field changes.
+        function populateTeamDropdown(school) {
+            const select = document.getElementById('teamName');
+            const previousValue = select.value;
+
+            // Keep only the placeholder option, drop everything else.
+            while (select.options.length > 1) select.remove(1);
+
+            if (!school) {
+                select.options[0].textContent = 'Select School first...';
+                select.disabled = true;
+                return;
+            }
+
+            if (!ksel_teamsLoaded) {
+                select.options[0].textContent = 'Loading teams...';
+                select.disabled = true;
+                return;
+            }
+
+            select.options[0].textContent = 'Select Team...';
+
+            const teams = ksel_teamsBySchool[school] || [];
+
+            if (teams.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'No teams found for this school';
+                opt.disabled = true;
+                select.appendChild(opt);
+                select.disabled = true;
+                return;
+            }
+
+            select.disabled = false;
+            teams.forEach(team => {
+                const opt = document.createElement('option');
+                opt.value = team;
+                opt.textContent = team;
+                select.appendChild(opt);
+            });
+
+            // Re-select the previous value if it still exists for this school
+            // (matters if teams were just refreshed after an admin edit).
+            if (previousValue && teams.includes(previousValue)) {
+                select.value = previousValue;
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // NEW: Team Roster Admin view (URL + "#admin", same trick as the
+        // Match Day Hub admin page)
+        // ------------------------------------------------------------------
+        function applyMode() {
+            const isAdmin = window.location.hash === '#admin';
+
+            document.getElementById('matchEntryView').classList.toggle('hidden', isAdmin);
+            document.getElementById('adminView').classList.toggle('hidden', !isAdmin);
+            document.getElementById('matchEntryButtons').classList.toggle('hidden', isAdmin);
+
+            document.getElementById('pageTitle').textContent = isAdmin
+                ? 'Team Roster Admin'
+                : 'Match Results Entry';
+            document.getElementById('pageSubtitle').textContent = isAdmin
+                ? 'Manage which teams show up per school'
+                : 'Enter Duo Player and Team results';
+
+            if (isAdmin) {
+                renderAdminTeamList();
+            }
+        }
+
+        // Admin's School dropdown is built by cloning the options from the
+        // main School field, so the two lists can never drift apart.
+        function populateAdminSchoolSelect() {
+            const source = document.getElementById('school');
+            const target = document.getElementById('admin_school');
+            while (target.options.length > 1) target.remove(1);
+            for (let i = 1; i < source.options.length; i++) {
+                const opt = document.createElement('option');
+                opt.value = source.options[i].value;
+                opt.textContent = source.options[i].textContent;
+                target.appendChild(opt);
+            }
+        }
+
+        function renderAdminTeamList() {
+            const school = document.getElementById('admin_school').value;
+            const listEl = document.getElementById('adminTeamList');
+            listEl.innerHTML = '';
+
+            if (!school) {
+                listEl.innerHTML = '<p class="text-gray-500 text-sm p-3">Select a school to see its teams.</p>';
+                return;
+            }
+            if (!ksel_teamsLoaded) {
+                listEl.innerHTML = '<p class="text-gray-500 text-sm p-3">Loading teams...</p>';
+                return;
+            }
+
+            const teams = ksel_teamsBySchool[school] || [];
+            if (teams.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500 text-sm p-3">No teams yet for this school.</p>';
+                return;
+            }
+
+            teams.forEach(team => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between px-3 py-2';
+
+                const span = document.createElement('span');
+                span.className = 'text-sm text-gray-800';
+                span.textContent = team;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'text-red-500 hover:text-red-700 text-xs font-medium';
+                btn.textContent = 'Remove';
+                btn.onclick = () => removeTeamAdmin(school, team);
+
+                row.appendChild(span);
+                row.appendChild(btn);
+                listEl.appendChild(row);
+            });
+        }
+
+        function showAdminStatus(message, isError = false) {
+            const status = document.getElementById('adminStatus');
+            status.className = `mt-4 p-3 rounded-lg text-sm ${isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
+            status.textContent = message;
+            status.classList.remove('hidden');
+        }
+
+        // Shared POST helper for admin actions — same hidden-iframe-form +
+        // postMessage-confirmation pattern as saveResults() below, kept as
+        // its own copy rather than a shared refactor so the already-working
+        // save flow is never touched.
+        function postToBackend(fields, onResult) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'ksel_adminFrame_' + Date.now();
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = SCRIPT_URL;
+            form.target = iframe.name;
+
+            Object.entries(fields).forEach(([key, value]) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+
+            let finished = false;
+            function finishOnce(result) {
+                if (finished) return;
+                finished = true;
+                window.removeEventListener('message', handleMessage);
+                clearTimeout(timeoutId);
+                form.remove();
+                iframe.remove();
+                onResult(result);
+            }
+
+            function handleMessage(event) {
+                let result = event.data;
+                if (typeof result === 'string') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch (err) {
+                        return;
+                    }
+                }
+                if (!result || result.requestId !== fields.requestId) return;
+                finishOnce(result);
+            }
+
+            window.addEventListener('message', handleMessage);
+
+            const timeoutId = setTimeout(() => {
+                finishOnce({ success: false, error: 'No response from the server — please check your connection and try again.' });
+            }, 8000);
+
+            form.submit();
+        }
+
+        function addTeamAdmin() {
+            const school = document.getElementById('admin_school').value;
+            const teamName = document.getElementById('admin_newTeamName').value.trim();
+
+            if (!school) {
+                showAdminStatus('Please select a school first.', true);
+                return;
+            }
+            if (!teamName) {
+                showAdminStatus('Please enter a team name.', true);
+                return;
+            }
+
+            const requestId = `addteam_${++ksel_verifyRequestCounter}`;
+            showAdminStatus('Adding team...');
+
+            postToBackend({ requestId, formAction: 'addTeam', school, teamName }, function (result) {
+                if (result && result.success) {
+                    showAdminStatus(`Added "${teamName}" to ${school}.`);
+                    document.getElementById('admin_newTeamName').value = '';
+                    fetchTeams(function () {
+                        renderAdminTeamList();
+                        populateTeamDropdown(document.getElementById('school').value);
+                    });
+                } else {
+                    showAdminStatus(`Error: ${(result && result.error) || 'Could not add team.'}`, true);
+                }
+            });
+        }
+
+        function removeTeamAdmin(school, teamName) {
+            const requestId = `removeteam_${++ksel_verifyRequestCounter}`;
+            showAdminStatus(`Removing "${teamName}"...`);
+
+            postToBackend({ requestId, formAction: 'removeTeam', school, teamName }, function (result) {
+                if (result && result.success) {
+                    showAdminStatus(`Removed "${teamName}" from ${school}.`);
+                    fetchTeams(function () {
+                        renderAdminTeamList();
+                        populateTeamDropdown(document.getElementById('school').value);
+                    });
+                } else {
+                    showAdminStatus(`Error: ${(result && result.error) || 'Could not remove team.'}`, true);
+                }
+            });
+        }
+
+        // Scoring functions
+        function getPlacementPoints(placement) {
+            if (placement === 1) return 25; // Victory Royale
+            if (placement >= 2 && placement <= 9) return 20;
+            if (placement >= 10 && placement <= 17) return 15;
+            if (placement >= 18 && placement <= 35) return 10;
+            if (placement >= 36 && placement <= 50) return 5;
+            return 0;
+        }
+
+        function getEliminationPoints(eliminations) {
+            return eliminations * 2;
+        }
+
+        function updateSummary() {
+            const placement = parseInt(document.getElementById('teamPlacement').value) || 0;
+            const eliminations = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_eliminations`).value) || 0);
+            }, 0);
+
+            const assists = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_assists`).value) || 0);
+            }, 0);
+
+            const revives = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_revives`).value) || 0);
+            }, 0);
+
+            // Calculate average accuracy (only count players with accuracy > 0)
+            const validAccuracies = [1, 2].map(i => parseFloat(document.getElementById(`player${i}_accuracy`).value) || 0).filter(acc => acc > 0);
+            const avgAccuracy = validAccuracies.length > 0 ? (validAccuracies.reduce((sum, acc) => sum + acc, 0) / validAccuracies.length).toFixed(1) : 0;
+
+            const damageToPlayers = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_damageToPlayers`).value) || 0);
+            }, 0);
+
+            const damageTaken = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_damageTaken`).value) || 0);
+            }, 0);
+
+            const distanceTraveled = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_distanceTraveled`).value) || 0);
+            }, 0);
+
+            const hits = [1, 2].reduce((sum, i) => {
+                return sum + (parseInt(document.getElementById(`player${i}_hits`).value) || 0);
+            }, 0);
+
+            const placementPoints = placement ? getPlacementPoints(placement) : 0;
+            const eliminationPoints = getEliminationPoints(eliminations);
+            const totalPoints = placementPoints + eliminationPoints;
+
+            document.getElementById('teamSummary').innerHTML = `
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-blue-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-blue-600">${placement || '--'}</div>
+                        <div class="text-sm text-blue-600">Team Placement</div>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-green-600">${eliminations}</div>
+                        <div class="text-sm text-green-600">Total Eliminations</div>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-yellow-600">${placementPoints}</div>
+                        <div class="text-sm text-yellow-600">Placement Points</div>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-purple-600">${totalPoints}</div>
+                        <div class="text-sm text-purple-600">Total Points</div>
+                    </div>
+                </div>
+
+                <div class="border-t pt-4">
+                    <h4 class="text-md font-semibold text-gray-700 mb-3">Detailed Team Statistics</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
+                        <div class="bg-red-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-red-600">${assists}</div>
+                            <div class="text-xs text-red-600">Total Assists</div>
+                        </div>
+                        <div class="bg-green-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-green-600">${revives}</div>
+                            <div class="text-xs text-green-600">Total Revives</div>
+                        </div>
+                        <div class="bg-blue-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-blue-600">${avgAccuracy}%</div>
+                            <div class="text-xs text-blue-600">Avg Accuracy</div>
+                        </div>
+                        <div class="bg-orange-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-orange-600">${damageToPlayers.toLocaleString()}</div>
+                            <div class="text-xs text-orange-600">Player Damage</div>
+                        </div>
+                        <div class="bg-indigo-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-indigo-600">${damageTaken.toLocaleString()}</div>
+                            <div class="text-xs text-indigo-600">Damage Taken</div>
+                        </div>
+                        <div class="bg-purple-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-purple-600">${distanceTraveled.toLocaleString()}</div>
+                            <div class="text-xs text-purple-600">Distance Traveled</div>
+                        </div>
+                        <div class="bg-pink-50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-pink-600">${hits}</div>
+                            <div class="text-xs text-pink-600">Total Hits</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add event listeners for real-time updates
+        document.addEventListener('input', updateSummary);
+
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.className = `mt-4 p-3 rounded-lg ${isError ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`;
+            status.textContent = message;
+            status.classList.remove('hidden');
+        }
+
+        function saveResults() {
+            const school = document.getElementById('school').value;
+            const teamName = document.getElementById('teamName').value;
+            const teamPlacement = document.getElementById('teamPlacement').value;
+
+            if (!school.trim()) {
+                showStatus('Error: Please select a school', true);
+                return;
+            }
+
+            if (!teamName.trim()) {
+                showStatus('Error: Please enter a team name', true);
+                return;
+            }
+
+            if (!teamPlacement) {
+                showStatus('Error: Please enter team placement', true);
+                return;
+            }
+
+            // Collect all data
+            const formData = {
+                school: school,
+                teamName: teamName,
+                date: document.getElementById('date').value,
+                gameMode: document.getElementById('gameMode').value,
+                teamPlacement: parseInt(teamPlacement),
+                players: [1, 2].map(i => ({
+                    gamerTag: document.getElementById(`player${i}_gamerTag`).value || '',
+                    eliminations: parseInt(document.getElementById(`player${i}_eliminations`).value) || 0,
+                    assists: parseInt(document.getElementById(`player${i}_assists`).value) || 0,
+                    revives: parseInt(document.getElementById(`player${i}_revives`).value) || 0,
+                    accuracy: parseFloat(document.getElementById(`player${i}_accuracy`).value) || 0,
+                    damageToPlayers: parseInt(document.getElementById(`player${i}_damageToPlayers`).value) || 0,
+                    damageTaken: parseInt(document.getElementById(`player${i}_damageTaken`).value) || 0,
+                    distanceTraveled: parseInt(document.getElementById(`player${i}_distanceTraveled`).value) || 0,
+                    hits: parseInt(document.getElementById(`player${i}_hits`).value) || 0
+                }))
+            };
+
+            // Calculate totals
+            const totalEliminations = formData.players.reduce((sum, p) => sum + p.eliminations, 0);
+            formData.totalEliminations = totalEliminations;
+            formData.totalPoints = getPlacementPoints(formData.teamPlacement) + getEliminationPoints(totalEliminations);
+
+            showStatus('Submitting your team results to the BattleBus Backend...');
+
+            // Create an iframe to submit the data (bypasses CORS)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'submitFrame';
+            document.body.appendChild(iframe);
+
+            // Create form to submit to iframe
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = SCRIPT_URL;
+            form.target = 'submitFrame';
+
+            // Uniquely tags this submission so we can match Apps Script's
+            // response (via postMessage, same technique as the gamer tag
+            // check) back to this specific save — same reasoning as
+            // verifyGamerTag's requestId.
+            const saveRequestId = `save_${++ksel_verifyRequestCounter}`;
+
+            // Add each piece of data as separate form fields to match sheet columns exactly
+            const fields = {
+                'requestId': saveRequestId,
+                'school': formData.school,
+                'teamName': formData.teamName,
+                'date': formData.date,
+                'gameMode': formData.gameMode,
+                'teamPlacement': formData.teamPlacement,
+                'totalPoints': formData.totalPoints,
+                // Player 1 - all fields including damage taken
+                'player1_gamerTag': formData.players[0].gamerTag,
+                'player1_eliminations': formData.players[0].eliminations,
+                'player1_assists': formData.players[0].assists,
+                'player1_revives': formData.players[0].revives,
+                'player1_accuracy': formData.players[0].accuracy,
+                'player1_damageToPlayers': formData.players[0].damageToPlayers,
+                'player1_damageTaken': formData.players[0].damageTaken,
+                'player1_distanceTraveled': formData.players[0].distanceTraveled,
+                'player1_hits': formData.players[0].hits,
+                // Player 2 - all fields including damage taken
+                'player2_gamerTag': formData.players[1].gamerTag,
+                'player2_eliminations': formData.players[1].eliminations,
+                'player2_assists': formData.players[1].assists,
+                'player2_revives': formData.players[1].revives,
+                'player2_accuracy': formData.players[1].accuracy,
+                'player2_damageToPlayers': formData.players[1].damageToPlayers,
+                'player2_damageTaken': formData.players[1].damageTaken,
+                'player2_distanceTraveled': formData.players[1].distanceTraveled,
+                'player2_hits': formData.players[1].hits,
+                // Team totals
+                'totalEliminations': formData.totalEliminations
+            };
+
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+
+            // Apps Script's doPost now reports back what actually happened
+            // (success or the real error) via postMessage, the same
+            // technique used for the gamer tag check — this used to be a
+            // blind fire-and-forget submit that showed "Success!" no matter
+            // what actually happened server-side, which is why a failed
+            // save could look identical to a working one.
+            let finished = false;
+            function finishOnce() {
+                if (finished) return;
+                finished = true;
+                window.removeEventListener('message', handleSaveMessage);
+                clearTimeout(timeoutId);
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }
+
+            function handleSaveMessage(event) {
+                let result = event.data;
+                if (typeof result === 'string') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch (err) {
+                        return; // not JSON — not meant for us
+                    }
+                }
+
+                if (!result || result.requestId !== saveRequestId) return;
+
+                finishOnce();
+
+                if (result.success) {
+                    showStatus(`Success! Data submitted for ${formData.teamName} with ${formData.totalPoints} points.`);
+                } else {
+                    showStatus(`Error: the save did not go through. ${result.error || 'Unknown error — check the Apps Script Executions log.'}`, true);
+                }
+            }
+
+            window.addEventListener('message', handleSaveMessage);
+
+            // Fallback in case no response ever arrives (e.g. an older
+            // Apps Script deployment that doesn't send one back yet) —
+            // shows an honest "couldn't confirm" message instead of
+            // claiming success we don't actually know happened.
+            const timeoutId = setTimeout(() => {
+                finishOnce();
+                showStatus(`Submitted for ${formData.teamName}, but could not confirm it saved — please check the Google Sheet.`, true);
+            }, 8000);
+
+            //Submit the form
+            form.submit();
+        }
+
+        // Initialize summary and set current date
+        updateSummary();
+
+        // Set today's date in the date field
+        const today = new Date();
+        const formattedDate = today.getFullYear() + '-' +
+            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+            String(today.getDate()).padStart(2, '0');
+        document.getElementById('date').value = formattedDate;
+
+        // ------------------------------------------------------------------
+        // NEW: wire up the team roster + admin/entry mode switch
+        // ------------------------------------------------------------------
+        populateAdminSchoolSelect();
+        applyMode();
+        window.addEventListener('hashchange', applyMode);
+
+        document.getElementById('school').addEventListener('change', function () {
+            populateTeamDropdown(this.value);
+        });
+        document.getElementById('admin_school').addEventListener('change', renderAdminTeamList);
+
+        fetchTeams(function () {
+            populateTeamDropdown(document.getElementById('school').value);
+            if (window.location.hash === '#admin') renderAdminTeamList();
+        });
+    </script>
+</body>
+</html>
                         <i data-lucide="x" class="w-4 h-4"></i>
                         Cancel
                     </button>
